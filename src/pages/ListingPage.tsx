@@ -19,7 +19,6 @@ import {
   paginate,
   parsePriceInput,
 } from "../lib/filterProducts";
-import styles from "./ListingPage.module.css";
 
 export default function ListingPage() {
   const filters = useFilterParams();
@@ -65,21 +64,28 @@ export default function ListingPage() {
     filters.brands.length;
 
   return (
-    <div className={styles.page}>
-      <section className={styles.heading}>
-        <p className={styles.eyebrow}>PRODUCT CATALOG</p>
-        <h1 className={styles.title}>Browse products</h1>
+    <div className="flex flex-col gap-5">
+      <section className="flex flex-col gap-1">
+        <p className="m-0 text-xs font-bold tracking-[0.08em] text-green">
+          PRODUCT CATALOG
+        </p>
+        <h1 className="m-0 font-display text-[1.75rem] font-extrabold tracking-tight">
+          Browse products
+        </h1>
       </section>
 
       <div
-        className={`${styles.layout} ${
-          desktopFiltersCollapsed ? styles.filtersCollapsed : ""
+        className={`grid grid-cols-1 items-start gap-6 ${
+          desktopFiltersCollapsed
+            ? "lg:grid-cols-1"
+            : "lg:grid-cols-[270px_minmax(0,1fr)]"
         }`}
       >
         <FilterPanel
           brands={brands}
           categories={categories}
           category={filters.category}
+          desktopCollapsed={desktopFiltersCollapsed}
           isOpen={mobileFiltersOpen}
           maxPrice={filters.maxPrice}
           minPrice={filters.minPrice}
@@ -92,9 +98,9 @@ export default function ListingPage() {
           selectedBrands={filters.brands}
         />
 
-        <section aria-label="Product results" className={styles.results}>
-          <div className={styles.toolbar}>
-            <p className={styles.resultCount} role="status">
+        <section aria-label="Product results" className="min-w-0">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <p className="m-0 text-sm font-medium text-muted" role="status">
               {loading
                 ? "Loading products..."
                 : `${filteredProducts.length} ${
@@ -104,13 +110,15 @@ export default function ListingPage() {
             <Button
               aria-controls="filters"
               aria-expanded={mobileFiltersOpen}
-              className={styles.mobileFilterToggle}
+              className="lg:hidden"
               onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
               variant="secondary"
             >
               <span>Filters</span>
               {activeFilterCount > 0 && (
-                <span className={styles.filterBadge}>{activeFilterCount}</span>
+                <span className="inline-grid h-5 min-w-5 place-items-center rounded-full bg-navy px-1.5 text-xs font-bold text-white">
+                  {activeFilterCount}
+                </span>
               )}
             </Button>
           </div>

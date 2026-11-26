@@ -56,7 +56,7 @@ Open the local URL printed by Vite (typically `http://localhost:5173`).
 - **URL-backed filters:** Keeping filters in `URLSearchParams` makes filtered views bookmarkable, prevents drift between components, and preserves state seamlessly when navigating to `/product/:id` and back.
 - **Fetch strategy (category-scoped):** When no category is selected, the app fetches `/products?limit=0` with `select=` to keep payloads small; when a category is selected, it fetches `/products/category/{slug}?limit=0`. This uses the brief's category endpoint directly without duplicate fetches.
 - **In-memory cache (`useFetch`):** Responses are cached in a module-level `Map` with `AbortController` cleanup and a `retry()` callback, eliminating redundant network calls and loading skeletons when pressing Back from a detail page.
-- **TypeScript & CSS Modules:** Strict TypeScript catches API and prop mismatches early, while CSS Modules paired with design tokens in `src/styles/tokens.css` keep styles scoped per component.
+- **TypeScript & Tailwind CSS:** Strict TypeScript catches API and prop mismatches early, while Tailwind CSS v4 with custom `@theme` tokens in [global.css](src/styles/global.css) keeps styling concise and consistent across components.
 
 ## Trade-offs and improvements with more time
 

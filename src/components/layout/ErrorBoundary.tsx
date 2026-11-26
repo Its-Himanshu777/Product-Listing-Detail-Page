@@ -26,7 +26,7 @@ export default class ErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto" }}>
+        <div className="mx-auto max-w-[640px] px-5 py-10">
           <ErrorState
             message="An unexpected error occurred while rendering this page."
             onRetry={() => this.setState({ hasError: false })}

@@ -4,7 +4,6 @@ import Button from "../ui/Button";
 import BrandFilter from "./BrandFilter";
 import CategoryFilter from "./CategoryFilter";
 import PriceRangeFilter from "./PriceRangeFilter";
-import styles from "./FilterPanel.module.css";
 
 type FilterPanelProps = {
   categories: Category[];
@@ -15,6 +14,7 @@ type FilterPanelProps = {
   maxPrice: string;
   selectedBrands: string[];
   isOpen: boolean;
+  desktopCollapsed?: boolean;
   onClose: () => void;
   onCategoryChange: (category: string) => void;
   onPriceChange: (min: string, max: string) => void;
@@ -31,6 +31,7 @@ export default function FilterPanel({
   maxPrice,
   selectedBrands,
   isOpen,
+  desktopCollapsed = false,
   onClose,
   onCategoryChange,
   onPriceChange,
@@ -40,23 +41,25 @@ export default function FilterPanel({
   return (
     <aside
       aria-label="Product filters"
-      className={`${styles.panel} ${isOpen ? styles.open : ""}`}
+      className={`${isOpen ? "block" : "hidden"} fixed inset-0 z-30 overflow-y-auto bg-white p-5 ${
+        desktopCollapsed ? "lg:hidden" : "lg:block"
+      } lg:static lg:z-auto lg:sticky lg:top-[84px] lg:self-start lg:rounded-[14px] lg:border lg:border-line lg:shadow-[0_2px_8px_rgba(24,48,74,0.05)]`}
       id="filters"
     >
-      <div className={styles.heading}>
+      <div className="mb-4 flex items-start justify-between gap-2">
         <div>
-          <span className={styles.eyebrow}>NARROW YOUR SEARCH</span>
-          <h2 className={styles.title}>Filters</h2>
+          <span className="block text-xs font-bold tracking-[0.06em] text-green">
+            NARROW YOUR SEARCH
+          </span>
+          <h2 className="mt-0.5 mb-0 font-display text-lg font-bold">
+            Filters
+          </h2>
         </div>
-        <div className={styles.headingActions}>
+        <div className="flex items-center gap-2">
           <Button onClick={onClearAll} variant="ghost">
             Clear all
           </Button>
-          <Button
-            className={styles.mobileClose}
-            onClick={onClose}
-            variant="secondary"
-          >
+          <Button className="lg:hidden" onClick={onClose} variant="secondary">
             Done
           </Button>
         </div>
@@ -68,7 +71,7 @@ export default function FilterPanel({
         value={category}
       />
 
-      <div className={styles.divider} />
+      <div className="my-4 h-px bg-line" />
 
       <PriceRangeFilter
         bounds={priceBounds}
@@ -76,7 +79,7 @@ export default function FilterPanel({
         value={{ min: minPrice, max: maxPrice }}
       />
 
-      <div className={styles.divider} />
+      <div className="my-4 h-px bg-line" />
 
       <BrandFilter
         brands={brands}

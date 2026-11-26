@@ -1,7 +1,6 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
-import styles from "./Header.module.css";
 
 type HeaderProps = {
   onToggleFilters: () => void;
@@ -62,11 +61,11 @@ export default function Header({ onToggleFilters }: HeaderProps) {
   }
 
   return (
-    <header className={styles.header}>
-      <div className={styles.inner}>
+    <header className="sticky top-0 z-20 h-16 bg-header text-white shadow-[0_2px_12px_rgba(24,48,74,0.14)]">
+      <div className="mx-auto grid h-full max-w-[1320px] grid-cols-[auto_minmax(0,1fr)_auto] items-center justify-between gap-3 px-3 sm:grid-cols-[auto_minmax(0,480px)_auto] sm:gap-4 sm:px-5">
         <button
           aria-label="Toggle filters"
-          className={styles.menuButton}
+          className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-[6px] border-0 bg-transparent text-white transition-colors hover:bg-white/12 focus-visible:outline-white"
           onClick={onToggleFilters}
           type="button"
         >
@@ -87,11 +86,14 @@ export default function Header({ onToggleFilters }: HeaderProps) {
         </button>
 
         <form
-          className={styles.searchForm}
+          className="flex h-[38px] w-full items-center gap-2 rounded-[6px] bg-white px-3 text-ink shadow-[inset_0_1px_2px_rgba(15,23,42,0.08)] focus-within:outline-2 focus-within:outline-offset-1 focus-within:outline-blue-300"
           onSubmit={handleSubmit}
           role="search"
         >
-          <span aria-hidden="true" className={styles.searchIcon}>
+          <span
+            aria-hidden="true"
+            className="inline-flex shrink-0 items-center text-muted"
+          >
             <svg
               fill="none"
               height="16"
@@ -108,7 +110,7 @@ export default function Header({ onToggleFilters }: HeaderProps) {
           </span>
           <input
             aria-label="Search products"
-            className={styles.searchInput}
+            className="w-full min-w-0 border-0 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
             onChange={(event) => setInputValue(event.target.value)}
             placeholder="Search products..."
             type="search"
@@ -116,13 +118,13 @@ export default function Header({ onToggleFilters }: HeaderProps) {
           />
         </form>
 
-        <div aria-hidden="true" className={styles.actions}>
-          <span className={styles.iconSlot}>
+        <div aria-hidden="true" className="flex items-center gap-2 sm:gap-4">
+          <span className="inline-flex h-7 w-7 items-center justify-center text-white/90">
             <svg fill="currentColor" height="20" viewBox="0 0 24 24" width="20">
               <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2ZM7.17 14.75l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 20 4H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25Z" />
             </svg>
           </span>
-          <span className={styles.iconSlot}>
+          <span className="inline-flex h-7 w-7 items-center justify-center text-white/90">
             <svg
               fill="none"
               height="20"
@@ -140,7 +142,7 @@ export default function Header({ onToggleFilters }: HeaderProps) {
               />
             </svg>
           </span>
-          <span className={styles.iconSlot}>
+          <span className="inline-flex h-7 w-7 items-center justify-center text-white/90">
             <svg fill="currentColor" height="20" viewBox="0 0 24 24" width="20">
               <path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z" />
             </svg>

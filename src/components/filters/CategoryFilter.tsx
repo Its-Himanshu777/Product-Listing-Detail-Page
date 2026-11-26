@@ -1,5 +1,4 @@
 import type { Category } from "../../types/product";
-import styles from "./FilterPanel.module.css";
 
 type CategoryFilterProps = {
   value: string;
@@ -13,13 +12,16 @@ export default function CategoryFilter({
   onChange,
 }: CategoryFilterProps) {
   return (
-    <div className={styles.section}>
-      <label className={styles.label} htmlFor="category-filter">
+    <div className="flex flex-col gap-2">
+      <label
+        className="text-sm font-semibold text-ink"
+        htmlFor="category-filter"
+      >
         Category
       </label>
-      <div className={styles.selectWrap}>
+      <div className="relative">
         <select
-          className={styles.select}
+          className="h-10 w-full cursor-pointer appearance-none rounded-[6px] border border-line bg-white pr-8 pl-3 text-sm"
           id="category-filter"
           onChange={(event) => onChange(event.target.value)}
           value={value}
@@ -31,7 +33,10 @@ export default function CategoryFilter({
             </option>
           ))}
         </select>
-        <span aria-hidden="true" className={styles.selectArrow}>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 right-3 -translate-y-[55%] text-muted"
+        >
           ⌄
         </span>
       </div>

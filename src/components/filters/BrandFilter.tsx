@@ -1,5 +1,4 @@
 import type { BrandOption } from "../../lib/filterProducts";
-import styles from "./FilterPanel.module.css";
 
 type BrandFilterProps = {
   value: string[];
@@ -21,27 +20,32 @@ export default function BrandFilter({
   }
 
   return (
-    <div className={styles.section}>
-      <div className={styles.subheading}>
-        <p className={styles.label}>Brand</p>
-        <span className={styles.countBadge}>{brands.length}</span>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <p className="m-0 text-sm font-semibold text-ink">Brand</p>
+        <span className="text-xs font-semibold text-muted">
+          {brands.length}
+        </span>
       </div>
       {brands.length === 0 ? (
-        <p className={styles.emptyBrands}>No brands in this category</p>
+        <p className="m-0 text-sm text-muted">No brands in this category</p>
       ) : (
-        <div className={styles.brandList}>
+        <div className="flex max-h-[280px] flex-col gap-2 overflow-y-auto pr-1">
           {brands.map((brand) => {
             const checked = value.includes(brand.name);
             return (
-              <label className={styles.checkOption} key={brand.name}>
+              <label
+                className="flex cursor-pointer items-center gap-2 py-0.5 text-sm"
+                key={brand.name}
+              >
                 <input
                   checked={checked}
-                  className={styles.checkbox}
+                  className="h-4 w-4 shrink-0 cursor-pointer accent-navy"
                   onChange={() => handleToggle(brand.name)}
                   type="checkbox"
                 />
-                <span className={styles.brandName}>{brand.name}</span>
-                <span className={styles.brandCount}>({brand.count})</span>
+                <span className="min-w-0 flex-1 truncate">{brand.name}</span>
+                <span className="text-xs text-muted">({brand.count})</span>
               </label>
             );
           })}

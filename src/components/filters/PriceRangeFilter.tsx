@@ -1,7 +1,6 @@
 import { type KeyboardEvent, useEffect, useState } from "react";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 import { isPriceRangeInvalid, parsePriceInput } from "../../lib/filterProducts";
-import styles from "./FilterPanel.module.css";
 
 type PriceRangeValue = {
   min: string;
@@ -90,17 +89,17 @@ export default function PriceRangeFilter({
   const maxPlaceholder = bounds ? `Max (${bounds.max})` : "Max";
 
   return (
-    <div className={styles.section}>
-      <p className={styles.label}>Price range</p>
-      <div className={styles.priceInputs}>
-        <label className={styles.priceField}>
-          <span aria-hidden="true" className={styles.currencyPrefix}>
+    <div className="flex flex-col gap-2">
+      <p className="m-0 text-sm font-semibold text-ink">Price range</p>
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
+        <label className="flex h-[38px] items-center rounded-[6px] border border-line bg-white px-2 focus-within:border-navy">
+          <span aria-hidden="true" className="mr-1 text-sm text-muted">
             $
           </span>
           <input
             aria-invalid={isInvalid || undefined}
             aria-label="Minimum price"
-            className={styles.priceInput}
+            className="w-full min-w-0 border-0 bg-transparent text-sm outline-none"
             min="0"
             onBlur={commitNow}
             onChange={(event) =>
@@ -112,17 +111,17 @@ export default function PriceRangeFilter({
             value={minInput}
           />
         </label>
-        <span aria-hidden="true" className={styles.priceSeparator}>
+        <span aria-hidden="true" className="text-xs text-muted">
           to
         </span>
-        <label className={styles.priceField}>
-          <span aria-hidden="true" className={styles.currencyPrefix}>
+        <label className="flex h-[38px] items-center rounded-[6px] border border-line bg-white px-2 focus-within:border-navy">
+          <span aria-hidden="true" className="mr-1 text-sm text-muted">
             $
           </span>
           <input
             aria-invalid={isInvalid || undefined}
             aria-label="Maximum price"
-            className={styles.priceInput}
+            className="w-full min-w-0 border-0 bg-transparent text-sm outline-none"
             min="0"
             onBlur={commitNow}
             onChange={(event) =>
@@ -136,11 +135,11 @@ export default function PriceRangeFilter({
         </label>
       </div>
       {isInvalid ? (
-        <p className={styles.validationError} role="alert">
+        <p className="m-0 text-xs font-semibold text-danger" role="alert">
           Min can&apos;t be more than max
         </p>
       ) : (
-        <p className={styles.hint}>Prices in USD</p>
+        <p className="m-0 text-xs text-muted">Prices in USD</p>
       )}
     </div>
   );

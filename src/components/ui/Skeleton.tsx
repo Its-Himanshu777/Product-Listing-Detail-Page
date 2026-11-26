@@ -1,5 +1,3 @@
-import styles from "./Skeleton.module.css";
-
 type SkeletonProps = {
   count?: number;
 };
@@ -9,14 +7,17 @@ export default function Skeleton({ count = 8 }: SkeletonProps) {
     <div
       aria-label="Loading products"
       aria-live="polite"
-      className={styles.grid}
+      className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4"
     >
       {Array.from({ length: count }, (_, index) => (
-        <div className={styles.card} key={index}>
-          <div className={styles.image} />
-          <div className={styles.line} />
-          <div className={`${styles.line} ${styles.short}`} />
-          <div className={`${styles.line} ${styles.price}`} />
+        <div
+          className="flex animate-pulse flex-col gap-3 rounded-[10px] border border-line bg-white p-4"
+          key={index}
+        >
+          <div className="aspect-[4/3] w-full rounded-[6px] bg-surface" />
+          <div className="h-3.5 rounded bg-surface" />
+          <div className="h-3.5 w-2/3 rounded bg-surface" />
+          <div className="h-[18px] w-2/5 rounded bg-surface" />
         </div>
       ))}
     </div>

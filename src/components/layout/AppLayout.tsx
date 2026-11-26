@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import ErrorBoundary from "./ErrorBoundary";
 import Header from "./Header";
-import styles from "./AppLayout.module.css";
 
 function ScrollManager() {
   const { pathname } = useLocation();
@@ -40,7 +39,7 @@ export default function AppLayout() {
 
     const isMobile =
       typeof window.matchMedia === "function" &&
-      window.matchMedia("(max-width: 900px)").matches;
+      window.matchMedia("(max-width: 1023px)").matches;
 
     if (isMobile) {
       setMobileFiltersOpen((open) => !open);
@@ -50,10 +49,10 @@ export default function AppLayout() {
   }, [location.pathname, navigate]);
 
   return (
-    <div className={styles.shell}>
+    <div className="flex min-h-screen flex-col">
       <ScrollManager />
       <Header onToggleFilters={toggleFilters} />
-      <main className={styles.main}>
+      <main className="mx-auto w-full max-w-[1320px] flex-1 px-5 pt-6 pb-10">
         <ErrorBoundary>
           <Outlet
             context={{
