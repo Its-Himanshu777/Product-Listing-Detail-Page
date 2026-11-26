@@ -1,0 +1,33 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 68px;
+  background: var(--color-navy-header);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(24, 48, 74, 0.1);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-5);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+}
+
+.brand:focus-visible {
+  outline-color: var(--color-paper);
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+}
