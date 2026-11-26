@@ -40,7 +40,7 @@ export default function BrandFilter({
               >
                 <input
                   checked={checked}
-                  className="h-4 w-4 shrink-0 cursor-pointer accent-navy"
+                  className="h-4 w-4 shrink-0 cursor-pointer rounded accent-blue-600"
                   onChange={() => handleToggle(brand.name)}
                   type="checkbox"
                 />

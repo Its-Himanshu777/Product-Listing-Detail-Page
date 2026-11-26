@@ -117,15 +117,18 @@ describe("Product listing and detail flow", () => {
 
     await screen.findByText("Smartphone 1");
 
-    await user.selectOptions(screen.getByLabelText("Category"), "smartphones");
+    await user.click(screen.getByRole("checkbox", { name: "Smartphones" }));
     expect(
       await screen.findByRole("checkbox", { name: /^Apple/ }),
     ).toBeInTheDocument();
     await user.click(screen.getByRole("checkbox", { name: /^Apple/ }));
 
-    await user.selectOptions(screen.getByLabelText("Category"), "groceries");
+    await user.click(screen.getByRole("checkbox", { name: "Groceries" }));
     expect(await screen.findByText("Organic Apples")).toBeInTheDocument();
     expect(screen.getByText("No brands in this category")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("checkbox", { name: "Groceries" }));
+    expect(await screen.findByText("15 results")).toBeInTheDocument();
   });
 
   it("shows validation message when min price exceeds max price without filtering products", async () => {
@@ -154,7 +157,7 @@ describe("Product listing and detail flow", () => {
 
     await screen.findByText("Smartphone 1");
 
-    await user.selectOptions(screen.getByLabelText("Category"), "smartphones");
+    await user.click(screen.getByRole("checkbox", { name: "Smartphones" }));
     await waitFor(() => {
       expect(productsApi.byCategory).toHaveBeenCalledTimes(1);
     });

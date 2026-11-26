@@ -41,7 +41,7 @@ export default function FilterPanel({
   return (
     <aside
       aria-label="Product filters"
-      className={`${isOpen ? "block" : "hidden"} fixed inset-0 z-30 overflow-y-auto bg-white p-5 ${
+      className={`${isOpen ? "block" : "hidden"} fixed inset-0 z-30 overflow-y-auto bg-[#f6f7f9] p-5 ${
         desktopCollapsed ? "lg:hidden" : "lg:block"
       } lg:static lg:z-auto lg:sticky lg:top-[84px] lg:self-start lg:rounded-[14px] lg:border lg:border-line lg:shadow-[0_2px_8px_rgba(24,48,74,0.05)]`}
       id="filters"
