@@ -71,6 +71,38 @@ function useListingFilters() {
   };
 }
 
+function getPaginationItems(
+  currentPage: number,
+  totalPages: number,
+): Array<number | "ellipsis"> {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const pages = new Set<number>([1, totalPages, currentPage]);
+  if (currentPage > 1) pages.add(currentPage - 1);
+  if (currentPage < totalPages) pages.add(currentPage + 1);
+  if (currentPage <= 3) {
+    pages.add(2);
+    pages.add(3);
+  }
+  if (currentPage >= totalPages - 2) {
+    pages.add(totalPages - 1);
+    pages.add(totalPages - 2);
+  }
+
+  const sorted = [...pages].sort((a, b) => a - b);
+  const items: Array<number | "ellipsis"> = [];
+  for (let index = 0; index < sorted.length; index++) {
+    const page = sorted[index];
+    if (index > 0 && page - sorted[index - 1] > 1) {
+      items.push("ellipsis");
+    }
+    items.push(page);
+  }
+  return items;
+}
+
 export default function ListingPage({
   cartCount,
   onOpenCart,
@@ -84,6 +116,7 @@ export default function ListingPage({
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -218,6 +251,21 @@ export default function ListingPage({
     currentPage * PAGE_SIZE,
   );
   const location = useLocation();
+  const activeFilterCount =
+    (filters.category ? 1 : 0) +
+    (filters.minPrice ? 1 : 0) +
+    (filters.maxPrice ? 1 : 0) +
+    filters.brands.length;
+  const paginationItems = getPaginationItems(currentPage, totalPages);
+
+  useEffect(() => {
+    if (location.hash === "#filters") {
+      setMobileFiltersOpen(true);
+      document
+        .getElementById("filters")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [location.hash]);
 
   function updateSearch(value: string) {
     filters.updateParam("q", value);
@@ -251,19 +299,31 @@ export default function ListingPage({
         </section>
 
         <div className="catalog-layout">
-          <aside className="filters-panel" id="filters">
+          <aside
+            className={`filters-panel${mobileFiltersOpen ? " is-open" : ""}`}
+            id="filters"
+          >
             <div className="filter-heading">
               <div>
                 <span className="eyebrow">NARROW YOUR SEARCH</span>
                 <h2>Filters</h2>
               </div>
-              <button
-                className="text-button"
-                onClick={filters.clearFilters}
-                type="button"
-              >
-                Clear all
-              </button>
+              <div className="filter-heading-actions">
+                <button
+                  className="text-button"
+                  onClick={filters.clearFilters}
+                  type="button"
+                >
+                  Clear all
+                </button>
+                <button
+                  className="mobile-filter-close"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  type="button"
+                >
+                  Done
+                </button>
+              </div>
             </div>
 
             <label className="filter-label" htmlFor="category-filter">
@@ -358,21 +418,38 @@ export default function ListingPage({
                       }`}
                 </p>
               </div>
-              <div className="sort-control">
-                <span>Sorted by</span>
-                <select
-                  aria-label="Sort products"
-                  onChange={(event) =>
-                    filters.updateParam("sort", event.target.value)
-                  }
-                  value={filters.sort}
+              <div className="toolbar-controls">
+                <button
+                  aria-controls="filters"
+                  aria-expanded={mobileFiltersOpen}
+                  className={`mobile-filter-toggle${mobileFiltersOpen || activeFilterCount > 0 ? " is-active" : ""}`}
+                  onClick={() => setMobileFiltersOpen((open) => !open)}
+                  type="button"
                 >
-                  <option value="recommended">Recommended</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="rating-desc">Customer Rating</option>
-                  <option value="title-asc">Name: A to Z</option>
-                </select>
+                  <span aria-hidden="true">☰</span>
+                  <span>Filters</span>
+                  {activeFilterCount > 0 && (
+                    <span className="mobile-filter-count">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </button>
+                <div className="sort-control">
+                  <span>Sorted by</span>
+                  <select
+                    aria-label="Sort products"
+                    onChange={(event) =>
+                      filters.updateParam("sort", event.target.value)
+                    }
+                    value={filters.sort}
+                  >
+                    <option value="recommended">Recommended</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="rating-desc">Customer Rating</option>
+                    <option value="title-asc">Name: A to Z</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -441,20 +518,27 @@ export default function ListingPage({
                 >
                   ← <span>Previous</span>
                 </button>
-                {Array.from(
-                  { length: totalPages },
-                  (_, index) => index + 1,
-                ).map((page) => (
-                  <button
-                    aria-current={page === currentPage ? "page" : undefined}
-                    className={`page-button ${page === currentPage ? "active" : ""}`}
-                    key={page}
-                    onClick={() => filters.setPage(page)}
-                    type="button"
-                  >
-                    {page}
-                  </button>
-                ))}
+                {paginationItems.map((item, index) =>
+                  item === "ellipsis" ? (
+                    <span
+                      aria-hidden="true"
+                      className="page-ellipsis"
+                      key={`ellipsis-${index}`}
+                    >
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      aria-current={item === currentPage ? "page" : undefined}
+                      className={`page-button ${item === currentPage ? "active" : ""}`}
+                      key={item}
+                      onClick={() => filters.setPage(item)}
+                      type="button"
+                    >
+                      {item}
+                    </button>
+                  ),
+                )}
                 <button
                   aria-label="Next page"
                   className="page-button page-arrow"

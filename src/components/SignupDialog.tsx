@@ -31,7 +31,17 @@ export default function SignupDialog({ onClose }: SignupDialogProps) {
         onClick={(event) => event.stopPropagation()}
         role="dialog"
       >
-        <h2 id="signup-dialog-title">Sign in or create account</h2>
+        <div className="signup-dialog-header">
+          <h2 id="signup-dialog-title">Sign in or create account</h2>
+          <button
+            aria-label="Close sign in dialog"
+            className="dialog-close"
+            onClick={onClose}
+            type="button"
+          >
+            ×
+          </button>
+        </div>
         <form onSubmit={handleSubmit}>
           <label htmlFor="signup-identifier">Enter mobile number or email</label>
           <input
