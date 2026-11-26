@@ -2,13 +2,14 @@ import { type PointerEvent, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import StarRating from "../components/StarRating";
-import type { Product } from "../types";
+import type { LocationStatus, Product } from "../types";
 import { API_URL, currency, fetchJson, getErrorMessage } from "../utils";
 
 type ProductDetailPageProps = {
   cartCount: number;
   onOpenCart: () => void;
   deliveryLocation: string;
+  locationStatus: LocationStatus;
   onOpenLocation: () => void;
   onAddToCart: (product: Product, quantity?: number) => void;
 };
@@ -17,6 +18,7 @@ export default function ProductDetailPage({
   cartCount,
   onOpenCart,
   deliveryLocation,
+  locationStatus,
   onOpenLocation,
   onAddToCart,
 }: ProductDetailPageProps) {
@@ -133,6 +135,7 @@ export default function ProductDetailPage({
         cartCount={cartCount}
         onOpenCart={onOpenCart}
         deliveryLocation={deliveryLocation}
+        locationStatus={locationStatus}
         onOpenLocation={onOpenLocation}
       />
       <main className="page-shell detail-shell">
@@ -358,8 +361,12 @@ export default function ProductDetailPage({
                   onClick={onOpenLocation}
                   type="button"
                 >
-                  Delivering to {deliveryLocation || "your location"} — Update
-                  location
+                  Delivering to{" "}
+                  {deliveryLocation ||
+                    (locationStatus === "loading"
+                      ? "Detecting location..."
+                      : "your location")}{" "}
+                  — Update location
                 </button>
                 <p className="detail-stock">In stock and ready to ship</p>
                 <label htmlFor="detail-quantity">Quantity:</label>

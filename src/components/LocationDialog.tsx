@@ -1,19 +1,33 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import type { LocationStatus } from "../types";
 
 type LocationDialogProps = {
   currentLocation: string;
+  locationStatus: LocationStatus;
+  locationError: string;
   onChange: (location: string) => void;
   onClose: () => void;
+  onDetectLocation: () => void;
   onSave: (location: string) => void;
 };
 
 export default function LocationDialog({
   currentLocation,
+  locationStatus,
+  locationError,
   onChange,
   onClose,
+  onDetectLocation,
   onSave,
 }: LocationDialogProps) {
   const [location, setLocation] = useState(currentLocation);
+  const userEditedRef = useRef(false);
+
+  useEffect(() => {
+    if (!userEditedRef.current) {
+      setLocation(currentLocation);
+    }
+  }, [currentLocation]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,23 +56,56 @@ export default function LocationDialog({
           </button>
         </div>
         <p>
-          Enter a city or postal code. Your delivery location updates as you
-          type.
+          Your current location is detected automatically when permission is
+          granted, or you can enter a city or postal code manually.
         </p>
+        {locationStatus === "loading" && (
+          <div className="location-status is-loading" role="status">
+            <span aria-hidden="true" className="location-spinner" />
+            <span>Detecting your current location...</span>
+          </div>
+        )}
+        {locationStatus === "error" && locationError && (
+          <p className="location-status is-error" role="alert">
+            {locationError}
+          </p>
+        )}
         <p aria-live="polite" className="location-preview">
-          Delivering to: <strong>{location.trim() || "Select address"}</strong>
+          Delivering to:{" "}
+          <strong>
+            {location.trim() ||
+              (locationStatus === "loading"
+                ? "Detecting location..."
+                : "Select address")}
+          </strong>
         </p>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="delivery-location-input">City or postal code</label>
+          <div className="location-field-header">
+            <label htmlFor="delivery-location-input">City or postal code</label>
+            <button
+              className="location-detect-button"
+              disabled={locationStatus === "loading"}
+              onClick={() => {
+                userEditedRef.current = false;
+                onDetectLocation();
+              }}
+              type="button"
+            >
+              {locationStatus === "loading"
+                ? "Detecting..."
+                : "Use current location"}
+            </button>
+          </div>
           <input
             autoFocus
             id="delivery-location-input"
             onChange={(event) => {
+              userEditedRef.current = true;
               const nextLocation = event.target.value;
               setLocation(nextLocation);
               onChange(nextLocation);
             }}
-            placeholder="e.g. Bengaluru 560037"
+            placeholder="Enter city, area, or postal code"
             required
             value={location}
           />

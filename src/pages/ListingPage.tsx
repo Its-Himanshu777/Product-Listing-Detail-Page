@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
-import type { Category, Product, ProductResponse } from "../types";
+import type { Category, LocationStatus, Product, ProductResponse } from "../types";
 import { API_URL, fetchJson, getErrorMessage, PAGE_SIZE } from "../utils";
 
 type ListingPageProps = {
   cartCount: number;
   onOpenCart: () => void;
   deliveryLocation: string;
+  locationStatus: LocationStatus;
   onOpenLocation: () => void;
   onAddToCart: (product: Product) => void;
 };
@@ -107,6 +108,7 @@ export default function ListingPage({
   cartCount,
   onOpenCart,
   deliveryLocation,
+  locationStatus,
   onOpenLocation,
   onAddToCart,
 }: ListingPageProps) {
@@ -281,6 +283,7 @@ export default function ListingPage({
         cartCount={cartCount}
         onOpenCart={onOpenCart}
         deliveryLocation={deliveryLocation}
+        locationStatus={locationStatus}
         onOpenLocation={onOpenLocation}
       />
       <main className="page-shell">

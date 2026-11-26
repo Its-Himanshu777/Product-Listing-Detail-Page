@@ -1,8 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Product, ProductResponse } from "../types";
+import type { LocationStatus, Product, ProductResponse } from "../types";
 import { API_URL, currency, fetchJson, getErrorMessage } from "../utils";
 import SignupDialog from "./SignupDialog";
+
+const SEARCH_CATEGORIES = [
+  { value: "", label: "All" },
+  { value: "smartphones", label: "Mobiles" },
+  { value: "laptops", label: "Laptops" },
+  { value: "fragrances", label: "Fragrances" },
+  { value: "beauty", label: "Beauty" },
+  { value: "home-decoration", label: "Home & Kitchen" },
+] as const;
 
 export type HeaderProps = {
   query: string;
@@ -12,6 +21,7 @@ export type HeaderProps = {
   cartCount: number;
   onOpenCart: () => void;
   deliveryLocation: string;
+  locationStatus?: LocationStatus;
   onOpenLocation: () => void;
 };
 
@@ -23,13 +33,46 @@ export default function Header({
   cartCount,
   onOpenCart,
   deliveryLocation,
+  locationStatus = "idle",
   onOpenLocation,
 }: HeaderProps) {
   const [signupOpen, setSignupOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<Product[]>([]);
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const [suggestionError, setSuggestionError] = useState("");
+  const categoryMenuRef = useRef<HTMLDivElement | null>(null);
+  const categoryTriggerRef = useRef<HTMLButtonElement | null>(null);
+
+  const selectedCategory =
+    SEARCH_CATEGORIES.find((option) => option.value === category) ??
+    SEARCH_CATEGORIES[0];
+  const isDetectingLocation =
+    locationStatus === "loading" && !deliveryLocation;
+  const locationDisplay =
+    deliveryLocation ||
+    (isDetectingLocation
+      ? "Detecting location..."
+      : locationStatus === "error"
+        ? "Enter location"
+        : "Select address");
+
+  useEffect(() => {
+    if (!categoryOpen) return;
+
+    function handlePointerDown(event: MouseEvent) {
+      if (
+        categoryMenuRef.current &&
+        !categoryMenuRef.current.contains(event.target as Node)
+      ) {
+        setCategoryOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, [categoryOpen]);
 
   useEffect(() => {
     const searchTerm = query.trim();
@@ -66,6 +109,23 @@ export default function Header({
     };
   }, [query]);
 
+  function selectCategory(nextCategory: string) {
+    onCategoryChange(nextCategory);
+    setCategoryOpen(false);
+    categoryTriggerRef.current?.focus();
+  }
+
+  function stepCategory(direction: 1 | -1) {
+    const currentIndex = SEARCH_CATEGORIES.findIndex(
+      (option) => option.value === category,
+    );
+    const baseIndex = currentIndex === -1 ? 0 : currentIndex;
+    const nextIndex =
+      (baseIndex + direction + SEARCH_CATEGORIES.length) %
+      SEARCH_CATEGORIES.length;
+    onCategoryChange(SEARCH_CATEGORIES[nextIndex].value);
+  }
+
   return (
     <>
       <header className="site-header">
@@ -74,18 +134,23 @@ export default function Header({
             <img alt="" className="brand-logo" src="/logo.svg" />
           </Link>
           <button
-            aria-label={`Update delivery location, currently ${deliveryLocation || "Select address"}`}
-            className="delivery-location"
+            aria-busy={isDetectingLocation}
+            aria-label={`Update delivery location, currently ${locationDisplay}`}
+            className={`delivery-location${isDetectingLocation ? " is-loading" : ""}`}
             onClick={onOpenLocation}
             type="button"
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M19 10c0 5-7 12-7 12S5 15 5 10a7 7 0 1 1 14 0Z" />
-              <circle cx="12" cy="10" r="2.2" />
-            </svg>
+            {isDetectingLocation ? (
+              <span aria-hidden="true" className="location-spinner" />
+            ) : (
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M19 10c0 5-7 12-7 12S5 15 5 10a7 7 0 1 1 14 0Z" />
+                <circle cx="12" cy="10" r="2.2" />
+              </svg>
+            )}
             <span>
-              <span>Deliver to</span>
-              <strong>{deliveryLocation || "Select address"}</strong>
+              <span>{isDetectingLocation ? "Detecting" : "Deliver to"}</span>
+              <strong>{locationDisplay}</strong>
             </span>
           </button>
           <div
@@ -97,23 +162,50 @@ export default function Header({
                 !event.currentTarget.contains(nextFocusedElement)
               ) {
                 setSuggestionsOpen(false);
+                setCategoryOpen(false);
               }
             }}
+            ref={categoryMenuRef}
           >
-            <label className="searchbox">
-              <select
-                aria-label="Search category"
-                className="search-category"
-                onChange={(event) => onCategoryChange(event.target.value)}
-                value={category}
+            <div className="searchbox" role="search">
+              <button
+                aria-controls="search-category-listbox"
+                aria-expanded={categoryOpen}
+                aria-haspopup="listbox"
+                aria-label={`Search category: ${selectedCategory.label}`}
+                className={`search-category-trigger${categoryOpen ? " is-open" : ""}`}
+                onClick={() => {
+                  setSuggestionsOpen(false);
+                  setCategoryOpen((open) => !open);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "ArrowDown") {
+                    event.preventDefault();
+                    if (!categoryOpen) setCategoryOpen(true);
+                    else stepCategory(1);
+                  } else if (event.key === "ArrowUp") {
+                    event.preventDefault();
+                    if (!categoryOpen) setCategoryOpen(true);
+                    else stepCategory(-1);
+                  } else if (event.key === "Escape" && categoryOpen) {
+                    event.preventDefault();
+                    setCategoryOpen(false);
+                  }
+                }}
+                ref={categoryTriggerRef}
+                type="button"
               >
-                <option value="">All</option>
-                <option value="smartphones">Mobiles</option>
-                <option value="laptops">Laptops</option>
-                <option value="fragrances">Fragrances</option>
-                <option value="beauty">Beauty</option>
-                <option value="home-decoration">Home &amp; Kitchen</option>
-              </select>
+                <span className="search-category-label">
+                  {selectedCategory.label}
+                </span>
+                <svg
+                  aria-hidden="true"
+                  className="search-category-chevron"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M4 6l4 4 4-4" />
+                </svg>
+              </button>
               <input
                 aria-label="Search products"
                 aria-autocomplete="list"
@@ -125,6 +217,7 @@ export default function Header({
                   onQueryChange(nextQuery);
                 }}
                 onFocus={() => {
+                  setCategoryOpen(false);
                   if (query.trim()) setSuggestionsOpen(true);
                 }}
                 onKeyDown={(event) => {
@@ -141,7 +234,43 @@ export default function Header({
                   <path d="m15.5 15.5 5 5" />
                 </svg>
               </span>
-            </label>
+            </div>
+            {categoryOpen && (
+              <div
+                aria-label="Search categories"
+                className="search-category-menu"
+                id="search-category-listbox"
+                role="listbox"
+              >
+                {SEARCH_CATEGORIES.map((option) => {
+                  const isSelected = option.value === selectedCategory.value;
+                  return (
+                    <button
+                      aria-selected={isSelected}
+                      className={`search-category-option${isSelected ? " is-selected" : ""}`}
+                      key={option.value || "all"}
+                      onClick={() => selectCategory(option.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                          event.preventDefault();
+                          setCategoryOpen(false);
+                          categoryTriggerRef.current?.focus();
+                        }
+                      }}
+                      role="option"
+                      type="button"
+                    >
+                      <span>{option.label}</span>
+                      {isSelected && (
+                        <span aria-hidden="true" className="search-category-check">
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
             {suggestionsOpen && query.trim() && (
               <div
                 aria-label="Product suggestions"

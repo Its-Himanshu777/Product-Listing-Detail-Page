@@ -31,3 +31,5 @@ export type CartItem = {
   product: Product;
   quantity: number;
 };
+
+export type LocationStatus = "idle" | "loading" | "success" | "error";
