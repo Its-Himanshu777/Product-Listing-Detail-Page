@@ -12,7 +12,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   secondary:
     "min-h-10 px-4 bg-white text-ink border border-line hover:bg-surface",
   ghost:
-    "min-h-0 px-2 py-1 bg-transparent text-green border border-transparent hover:underline",
+    "min-h-0 px-0 py-1 bg-transparent text-green border border-transparent hover:underline",
 };
 
 export default function Button({

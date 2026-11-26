@@ -49,7 +49,7 @@ export default function CategoryFilter({
         />
       </div>
 
-      <div className="flex items-center justify-between pt-1">
+      <div className="flex items-baseline justify-between pt-1">
         <p className="m-0 text-sm font-semibold text-ink">Categories</p>
         {value && (
           <button

@@ -46,22 +46,20 @@ export default function FilterPanel({
       } lg:static lg:z-auto lg:sticky lg:top-[84px] lg:self-start lg:rounded-[14px] lg:border lg:border-line lg:shadow-[0_2px_8px_rgba(24,48,74,0.05)]`}
       id="filters"
     >
-      <div className="mb-4 flex items-start justify-between gap-2">
-        <div>
-          <span className="block text-xs font-bold tracking-[0.06em] text-green">
-            NARROW YOUR SEARCH
-          </span>
-          <h2 className="mt-0.5 mb-0 font-display text-lg font-bold">
-            Filters
-          </h2>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button onClick={onClearAll} variant="ghost">
-            Clear all
-          </Button>
-          <Button className="lg:hidden" onClick={onClose} variant="secondary">
-            Done
-          </Button>
+      <div className="mb-4">
+        <span className="block text-xs font-bold tracking-[0.06em] text-green">
+          NARROW YOUR SEARCH
+        </span>
+        <div className="mt-0.5 flex items-center justify-between gap-2">
+          <h2 className="m-0 font-display text-lg font-bold">Filters</h2>
+          <div className="flex items-center gap-3">
+            <Button onClick={onClearAll} variant="ghost">
+              Clear all
+            </Button>
+            <Button className="lg:hidden" onClick={onClose} variant="secondary">
+              Done
+            </Button>
+          </div>
         </div>
       </div>
 
