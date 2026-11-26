@@ -1,5 +1,5 @@
 import { type FormEvent, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
 import { formatPrice } from "../../lib/format";
 import Button from "../ui/Button";
@@ -7,12 +7,19 @@ import Button from "../ui/Button";
 type PanelId = "cart" | "activity" | "account";
 
 export default function HeaderActions() {
+  const location = useLocation();
   const [openPanel, setOpenPanel] = useState<PanelId | null>(null);
   const [accountEmail, setAccountEmail] = useState("");
   const [signedInUser, setSignedInUser] = useState<string | null>(null);
   const [accountError, setAccountError] = useState("");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const recentProducts = useRecentlyViewed();
+
+  const existingFrom = (location.state as { from?: string } | null)?.from;
+  const listingReturnTo =
+    location.pathname === "/"
+      ? location.pathname + location.search
+      : (existingFrom ?? "/");
 
   useEffect(() => {
     if (!openPanel) return;
@@ -158,7 +165,7 @@ export default function HeaderActions() {
             <Link
               className="inline-flex min-h-9 w-full items-center justify-center rounded-[6px] bg-navy px-3 text-xs font-semibold text-white hover:bg-[#234366]"
               onClick={() => setOpenPanel(null)}
-              to="/"
+              to={listingReturnTo}
             >
               Browse products
             </Link>
@@ -192,6 +199,8 @@ export default function HeaderActions() {
                   <Link
                     className="flex items-center gap-3 rounded-[8px] p-1.5 transition-colors hover:bg-surface"
                     onClick={() => setOpenPanel(null)}
+                    replace={location.pathname.startsWith("/product/")}
+                    state={{ from: listingReturnTo }}
                     to={`/product/${product.id}`}
                   >
                     <img

@@ -62,4 +62,5 @@ Open the local URL printed by Vite (typically `http://localhost:5173`).
 
 - Replace the lightweight `Map` cache in `useFetch` with TanStack Query for request deduplication, stale-while-revalidate background updates, and configurable retry backoff.
 - Add end-to-end browser tests with Playwright against a preview build.
-- I prototyped cart/search/sort on the `extras` branch but kept `main` scoped to the brief.
+- **Product detail page & Back behavior:** Built the detail route with the seven required fields and a `← Back to results` button that preserves listing filters across every entry path (cards and recently viewed links).
+- **Extras branch:** Full cart checkout/add-to-cart, geolocation delivery address, sort dropdown, 360° viewer, and customer reviews remain archived on the `extras` branch, while `main` keeps the scoped catalog experience plus the wireframe header search (`?q=`) and lightweight Cart / Recently Viewed / Account header popovers.

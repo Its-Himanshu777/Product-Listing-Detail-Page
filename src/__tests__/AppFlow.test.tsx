@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -198,6 +198,41 @@ describe("Product listing and detail flow", () => {
     expect(screen.getByPlaceholderText("Search products...")).toHaveValue(
       "Apples",
     );
+  });
+
+  it("preserves listing filters when opening a product from Recently viewed and clicking Back", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+
+    await screen.findByText("Smartphone 1");
+
+    await user.click(screen.getByRole("link", { name: "View Smartphone 1" }));
+    expect(
+      await screen.findByText("Detailed specs for Smartphone 1"),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "← Back to results" }));
+
+    await user.click(screen.getByRole("checkbox", { name: "Smartphones" }));
+    await user.click(await screen.findByRole("checkbox", { name: /^Apple/ }));
+    expect(screen.getByText("7 results")).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: "Recently viewed products" }),
+    );
+    const recentDialog = screen.getByRole("dialog", {
+      name: "Recently viewed products",
+    });
+    await user.click(
+      within(recentDialog).getByRole("link", { name: /Smartphone 1/ }),
+    );
+    expect(
+      await screen.findByText("Detailed specs for Smartphone 1"),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "← Back to results" }));
+    expect(await screen.findByText("7 results")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Smartphones" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: /^Apple/ })).toBeChecked();
   });
 
   it("opens cart, recently viewed, and account popovers when clicking header action icons", async () => {
