@@ -33,6 +33,16 @@
   align-items: start;
 }
 
+@media (min-width: 901px) {
+  .filtersCollapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .filtersCollapsed aside {
+    display: none;
+  }
+}
+
 .results {
   min-width: 0;
 }

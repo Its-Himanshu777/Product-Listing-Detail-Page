@@ -1,5 +1,10 @@
-import { useEffect, useRef } from "react";
-import { Outlet, useLocation, useNavigationType } from "react-router-dom";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useNavigationType,
+} from "react-router-dom";
 import ErrorBoundary from "./ErrorBoundary";
 import Header from "./Header";
 import styles from "./AppLayout.module.css";
@@ -22,13 +27,42 @@ function ScrollManager() {
 }
 
 export default function AppLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [desktopFiltersCollapsed, setDesktopFiltersCollapsed] = useState(false);
+
+  const toggleFilters = useCallback(() => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      return;
+    }
+
+    const isMobile =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(max-width: 900px)").matches;
+
+    if (isMobile) {
+      setMobileFiltersOpen((open) => !open);
+    } else {
+      setDesktopFiltersCollapsed((collapsed) => !collapsed);
+    }
+  }, [location.pathname, navigate]);
+
   return (
     <div className={styles.shell}>
       <ScrollManager />
-      <Header />
+      <Header onToggleFilters={toggleFilters} />
       <main className={styles.main}>
         <ErrorBoundary>
-          <Outlet />
+          <Outlet
+            context={{
+              mobileFiltersOpen,
+              desktopFiltersCollapsed,
+              setMobileFiltersOpen,
+              toggleFilters,
+            }}
+          />
         </ErrorBoundary>
       </main>
     </div>

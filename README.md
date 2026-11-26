@@ -47,7 +47,7 @@ Open the local URL printed by Vite (typically `http://localhost:5173`).
 
 - Brands are derived from the currently fetched product set (all products or the active category) rather than globally, so users are never offered dead brand options.
 - Price range filtering, brand filtering, and pagination run in the browser on the fetched product set.
-- Filter and page state (`category`, `min`, `max`, `brand`, `page`) lives in the URL query string.
+- Filter and page state (`category`, `min`, `max`, `brand`, `q`, `page`) lives in the URL query string.
 - Prices returned by DummyJSON are raw USD values and are formatted in USD (`Intl.NumberFormat("en-US", { style: "currency", currency: "USD" })`).
 
 ## Architecture decisions

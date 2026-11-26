@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getErrorMessage } from "../api/http";
 import FilterPanel from "../components/filters/FilterPanel";
+import { useAppLayoutContext } from "../components/layout/layoutContext";
 import ProductGrid from "../components/product/ProductGrid";
 import Button from "../components/ui/Button";
 import EmptyState from "../components/ui/EmptyState";
@@ -24,7 +25,8 @@ export default function ListingPage() {
   const filters = useFilterParams();
   const { products, loading, error, retry } = useProducts(filters.category);
   const { categories } = useCategories();
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { mobileFiltersOpen, desktopFiltersCollapsed, setMobileFiltersOpen } =
+    useAppLayoutContext();
 
   const brands = useMemo(() => extractBrands(products), [products]);
   const priceBounds = useMemo(() => getPriceBounds(products), [products]);
@@ -35,8 +37,15 @@ export default function ListingPage() {
         min: parsePriceInput(filters.minPrice),
         max: parsePriceInput(filters.maxPrice),
         brands: filters.brands,
+        query: filters.query,
       }),
-    [products, filters.minPrice, filters.maxPrice, filters.brands],
+    [
+      products,
+      filters.minPrice,
+      filters.maxPrice,
+      filters.brands,
+      filters.query,
+    ],
   );
 
   const {
@@ -52,6 +61,7 @@ export default function ListingPage() {
     (filters.category ? 1 : 0) +
     (filters.minPrice ? 1 : 0) +
     (filters.maxPrice ? 1 : 0) +
+    (filters.query ? 1 : 0) +
     filters.brands.length;
 
   return (
@@ -61,7 +71,11 @@ export default function ListingPage() {
         <h1 className={styles.title}>Browse products</h1>
       </section>
 
-      <div className={styles.layout}>
+      <div
+        className={`${styles.layout} ${
+          desktopFiltersCollapsed ? styles.filtersCollapsed : ""
+        }`}
+      >
         <FilterPanel
           brands={brands}
           categories={categories}
@@ -91,7 +105,7 @@ export default function ListingPage() {
               aria-controls="filters"
               aria-expanded={mobileFiltersOpen}
               className={styles.mobileFilterToggle}
-              onClick={() => setMobileFiltersOpen((open) => !open)}
+              onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
               variant="secondary"
             >
               <span>Filters</span>

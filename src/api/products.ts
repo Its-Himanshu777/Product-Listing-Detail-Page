@@ -6,7 +6,7 @@ const BASE = import.meta.env.VITE_API_URL ?? "https://dummyjson.com";
 export const productsApi = {
   list: (signal?: AbortSignal) =>
     http<ProductListResponse>(
-      `${BASE}/products?limit=0&select=id,title,price,rating,thumbnail,brand,category`,
+      `${BASE}/products?limit=0&select=id,title,description,price,rating,thumbnail,brand,category`,
       signal,
     ),
   byCategory: (slug: string, signal?: AbortSignal) =>

@@ -82,6 +82,14 @@ describe("filterProducts", () => {
     const result = filterProducts(sampleProducts, { brands: [] });
     expect(result).toHaveLength(4);
   });
+
+  it("filters by search query across title, description, brand, and category", () => {
+    const result = filterProducts(sampleProducts, {
+      brands: [],
+      query: "charger",
+    });
+    expect(result.map((p) => p.id)).toEqual([4]);
+  });
 });
 
 describe("extractBrands", () => {

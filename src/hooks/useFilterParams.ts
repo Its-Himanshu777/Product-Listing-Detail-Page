@@ -9,6 +9,7 @@ export function useFilterParams() {
   const category = searchParams.get("category") ?? "";
   const minPrice = searchParams.get("min") ?? "";
   const maxPrice = searchParams.get("max") ?? "";
+  const query = searchParams.get("q") ?? "";
   const brands = searchParams.getAll("brand");
   const page = Math.max(1, Number(searchParams.get("page")) || 1);
 
@@ -81,6 +82,18 @@ export function useFilterParams() {
     [searchParams, setSearchParams],
   );
 
+  const setQuery = useCallback(
+    (nextQuery: string) => {
+      const next = new URLSearchParams(searchParams);
+      const trimmed = nextQuery.trim();
+      if (trimmed) next.set("q", trimmed);
+      else next.delete("q");
+      next.delete("page");
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams],
+  );
+
   const clearFilters = useCallback(() => {
     setSearchParams(new URLSearchParams(), { replace: true });
   }, [setSearchParams]);
@@ -89,12 +102,14 @@ export function useFilterParams() {
     category,
     minPrice,
     maxPrice,
+    query,
     brands,
     page,
     setCategory,
     setPriceRange,
     setBrands,
     setPage,
+    setQuery,
     clearFilters,
   };
 }

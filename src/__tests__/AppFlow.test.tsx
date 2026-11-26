@@ -175,6 +175,28 @@ describe("Product listing and detail flow", () => {
     expect(productsApi.byCategory).toHaveBeenCalledTimes(1);
   });
 
+  it("filters products via header search and preserves query across detail Back navigation", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+
+    await screen.findByText("Smartphone 1");
+
+    const searchInput = screen.getByPlaceholderText("Search products...");
+    await user.type(searchInput, "Apples{Enter}");
+
+    expect(await screen.findByText("1 result")).toBeInTheDocument();
+    expect(screen.getByText("Organic Apples")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("link", { name: "View Organic Apples" }));
+    expect(await screen.findByText("Fresh crisp apples")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "← Back to results" }));
+    expect(await screen.findByText("1 result")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Search products...")).toHaveValue(
+      "Apples",
+    );
+  });
+
   it("shows Product not found for 404 product and NotFound for unknown routes", async () => {
     renderApp("/product/9999");
     expect(await screen.findByText("Product not found")).toBeInTheDocument();

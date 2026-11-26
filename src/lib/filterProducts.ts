@@ -6,6 +6,7 @@ export type Filters = {
   min?: number;
   max?: number;
   brands: string[];
+  query?: string;
 };
 
 export type BrandOption = {
@@ -31,6 +32,7 @@ export function filterProducts(
 ): Product[] {
   const brandSet = new Set(filters.brands);
   const applyPrice = !isPriceRangeInvalid(filters.min, filters.max);
+  const normalizedQuery = filters.query?.trim().toLowerCase() ?? "";
 
   return products.filter((product) => {
     const matchesMin =
@@ -40,7 +42,12 @@ export function filterProducts(
     const matchesBrand =
       brandSet.size === 0 ||
       Boolean(product.brand && brandSet.has(product.brand));
-    return matchesMin && matchesMax && matchesBrand;
+    const matchesQuery =
+      !normalizedQuery ||
+      `${product.title} ${product.description ?? ""} ${product.brand ?? ""} ${product.category}`
+        .toLowerCase()
+        .includes(normalizedQuery);
+    return matchesMin && matchesMax && matchesBrand && matchesQuery;
   });
 }
 
