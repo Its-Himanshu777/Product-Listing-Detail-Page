@@ -197,6 +197,39 @@ describe("Product listing and detail flow", () => {
     );
   });
 
+  it("opens cart, recently viewed, and account popovers when clicking header action icons", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+
+    await screen.findByText("Smartphone 1");
+
+    await user.click(screen.getByRole("button", { name: "Shopping cart" }));
+    expect(
+      screen.getByRole("dialog", { name: "Shopping cart summary" }),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("link", { name: "View Smartphone 1" }));
+    expect(
+      await screen.findByText("Detailed specs for Smartphone 1"),
+    ).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: "Recently viewed products" }),
+    );
+    const activityDialog = screen.getByRole("dialog", {
+      name: "Recently viewed products",
+    });
+    expect(activityDialog).toHaveTextContent("Smartphone 1");
+
+    await user.click(screen.getByRole("button", { name: "Account" }));
+    const accountDialog = screen.getByRole("dialog", { name: "Account" });
+    expect(accountDialog).toBeInTheDocument();
+    await user.type(screen.getByLabelText("Email address"), "alex@example.com");
+    await user.click(screen.getByRole("button", { name: "Sign in" }));
+    expect(screen.getByText(/Signed in as/)).toBeInTheDocument();
+    expect(screen.getByText("alex@example.com")).toBeInTheDocument();
+  });
+
   it("shows Product not found for 404 product and NotFound for unknown routes", async () => {
     renderApp("/product/9999");
     expect(await screen.findByText("Product not found")).toBeInTheDocument();

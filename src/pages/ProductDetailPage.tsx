@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getErrorMessage } from "../api/http";
 import StarRating from "../components/product/StarRating";
 import Button from "../components/ui/Button";
 import ErrorState from "../components/ui/ErrorState";
 import { useProduct } from "../hooks/useProduct";
+import { addRecentlyViewed } from "../hooks/useRecentlyViewed";
 import { formatCategoryLabel, formatPrice } from "../lib/format";
 
 export default function ProductDetailPage() {
@@ -16,6 +17,12 @@ export default function ProductDetailPage() {
     productId: number;
     index: number;
   }>({ productId: -1, index: 0 });
+
+  useEffect(() => {
+    if (product) {
+      addRecentlyViewed(product);
+    }
+  }, [product]);
 
   const from = (location.state as { from?: string } | null)?.from;
 
