@@ -558,7 +558,7 @@ export default function ListingPage({
       </main>
       <footer className="site-footer">
         <Link className="footer-brand" to="/">
-          Amazon
+          Leegality
         </Link>
         <span>Shop confidently, every day.</span>
         <span>Product selection powered by DummyJSON.</span>
