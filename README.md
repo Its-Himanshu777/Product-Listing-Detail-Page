@@ -60,7 +60,19 @@ Open the local URL printed by Vite (typically `http://localhost:5173`).
 
 ## Trade-offs and improvements with more time
 
-- Replace the lightweight `Map` cache in `useFetch` with TanStack Query for request deduplication, stale-while-revalidate background updates, and configurable retry backoff.
-- Add end-to-end browser tests with Playwright against a preview build.
-- **Product detail page & Back behavior:** Built the detail route with the seven required fields and a `← Back to results` button that preserves listing filters across every entry path (cards and recently viewed links).
-- **Extras branch:** Full cart checkout/add-to-cart, geolocation delivery address, sort dropdown, 360° viewer, and customer reviews remain archived on the `extras` branch, while `main` keeps the scoped catalog experience plus the wireframe header search (`?q=`) and lightweight Cart / Recently Viewed / Account header popovers.
+- **Extras branch vs. `main`:** Full cart checkout/add-to-cart, geolocation delivery address, sort dropdown, 360° viewer, and customer reviews remain archived on the `extras` branch, while `main` stays focused on the brief alongside the wireframe header search (`?q=`) and lightweight Cart / Recently Viewed / Account header popovers.
+- **Filtering & Facets:**
+  - Add a price **range slider** next to the min/max inputs using bounds derived from the loaded dataset.
+  - Add **brand search** inside the brand list and a **"Show more"** toggle after 8 brands.
+  - Compute **facet counts** dynamically as other active filters change.
+  - Add **sort** by price or rating (deliberately omitted from `main` to stay within the 2-day brief).
+- **Search & Browsing:**
+  - Upgrade client-side `?q=` filtering to debounced typeahead suggestions backed by `/products/search`.
+  - Offer "Load more" or infinite scroll with a virtualised grid as an alternative to pagination.
+- **Product Detail & UX:**
+  - Add image zoom on hover, a lightbox gallery, and a related-products row from the same category.
+  - Support dark mode via Tailwind `@theme` tokens in [global.css](src/styles/global.css).
+  - Persist **recently viewed products** in `localStorage` (currently held in memory for the active session).
+- **Architecture, Backend & Quality:**
+  - Move filtering, sorting, and pagination to a real backend and adopt **TanStack Query** for caching, deduplication, background revalidation, and retries.
+  - Enforce Lighthouse score ≥ 95, bundle-size budgets, and **Playwright** end-to-end tests in CI.
