@@ -67,7 +67,7 @@ export default function CategoryFilter({
       ) : (
         <div
           aria-label="Categories"
-          className="flex max-h-[240px] flex-col gap-2 overflow-y-auto pr-1"
+          className="-mx-1 flex max-h-[240px] flex-col gap-2 overflow-y-auto p-1"
           role="group"
         >
           {visibleCategories.map((category) => {
@@ -79,7 +79,7 @@ export default function CategoryFilter({
               >
                 <input
                   checked={checked}
-                  className="h-4 w-4 shrink-0 cursor-pointer rounded accent-blue-600"
+                  className="h-4 w-4 shrink-0 cursor-pointer accent-blue-600"
                   onChange={() => onChange(checked ? "" : category.slug)}
                   type="checkbox"
                 />

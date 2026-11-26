@@ -30,7 +30,7 @@ export default function BrandFilter({
       {brands.length === 0 ? (
         <p className="m-0 text-sm text-muted">No brands in this category</p>
       ) : (
-        <div className="flex max-h-[280px] flex-col gap-2 overflow-y-auto pr-1">
+        <div className="-mx-1 flex max-h-[280px] flex-col gap-2 overflow-y-auto p-1">
           {brands.map((brand) => {
             const checked = value.includes(brand.name);
             return (
@@ -40,7 +40,7 @@ export default function BrandFilter({
               >
                 <input
                   checked={checked}
-                  className="h-4 w-4 shrink-0 cursor-pointer rounded accent-blue-600"
+                  className="h-4 w-4 shrink-0 cursor-pointer accent-blue-600"
                   onChange={() => handleToggle(brand.name)}
                   type="checkbox"
                 />
