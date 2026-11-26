@@ -84,7 +84,7 @@ export default function App() {
       },
       {
         enableHighAccuracy: false,
-        timeout: 10000,
+        timeout: 15000,
         maximumAge: 300000,
       },
     );

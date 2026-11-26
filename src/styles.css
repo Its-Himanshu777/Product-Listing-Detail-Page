@@ -4471,6 +4471,23 @@ body {
 }
 
 @media (max-width: 760px) {
+  .delivery-location {
+    min-height: 40px;
+    padding: 8px 10px;
+  }
+
+  .delivery-location > span {
+    overflow: hidden;
+  }
+
+  .delivery-location strong {
+    flex: 1;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .search-category-trigger {
     min-width: 54px;
     max-width: 112px;
@@ -4489,16 +4506,45 @@ body {
     font-size: 14px;
   }
 
+  .location-dialog {
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+  }
+
   .location-dialog .location-status {
     margin: 0 16px 12px;
+  }
+
+  .location-detect-button {
+    min-height: 36px;
+    padding: 6px 10px;
+    border: 1px solid #cce6ec;
+    border-radius: 6px;
+    background: #f0f8fa;
   }
 
   .location-dialog form {
     padding: 0 16px 16px;
   }
 
+  .location-dialog .dialog-actions {
+    padding: 12px 0 0;
+  }
+
+  .location-dialog .dialog-actions .button {
+    width: 100%;
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
   .location-dialog > p:not(.location-status) {
     margin: 14px 16px 12px;
+  }
+
+  .detail-location-button {
+    min-height: 36px;
+    padding: 4px 0;
   }
 }
 

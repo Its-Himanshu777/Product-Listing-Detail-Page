@@ -53,7 +53,7 @@ export default function Header({
   const locationDisplay =
     deliveryLocation ||
     (isDetectingLocation
-      ? "Detecting location..."
+      ? "current location..."
       : locationStatus === "error"
         ? "Enter location"
         : "Select address");
@@ -149,7 +149,7 @@ export default function Header({
               </svg>
             )}
             <span>
-              <span>{isDetectingLocation ? "Detecting" : "Deliver to"}</span>
+              <span>{isDetectingLocation ? "Locating" : "Deliver to"}</span>
               <strong>{locationDisplay}</strong>
             </span>
           </button>

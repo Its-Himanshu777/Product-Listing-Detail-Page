@@ -97,7 +97,8 @@ export default function LocationDialog({
             </button>
           </div>
           <input
-            autoFocus
+            autoComplete="street-address"
+            enterKeyHint="done"
             id="delivery-location-input"
             onChange={(event) => {
               userEditedRef.current = true;
@@ -107,6 +108,7 @@ export default function LocationDialog({
             }}
             placeholder="Enter city, area, or postal code"
             required
+            type="text"
             value={location}
           />
           <div className="dialog-actions">
