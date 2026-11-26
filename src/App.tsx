@@ -10,7 +10,7 @@ import { reverseGeocode } from "./utils";
 function getGeolocationErrorMessage(error: GeolocationPositionError): string {
   switch (error.code) {
     case error.PERMISSION_DENIED:
-      return "Location access was denied. Please enter your city or postal code manually.";
+      return "Location access was denied by your browser or device settings. Enable Location for Safari/Chrome (then tap 'Use current location'), or enter your city or postal code manually.";
     case error.POSITION_UNAVAILABLE:
       return "Your location is currently unavailable. Please enter your city or postal code manually.";
     case error.TIMEOUT:
@@ -85,7 +85,7 @@ export default function App() {
       {
         enableHighAccuracy: false,
         timeout: 15000,
-        maximumAge: 300000,
+        maximumAge: isManualRetry ? 0 : 300000,
       },
     );
   }, []);
