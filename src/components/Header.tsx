@@ -223,7 +223,7 @@ export default function Header({
                 onKeyDown={(event) => {
                   if (event.key === "Escape") setSuggestionsOpen(false);
                 }}
-                placeholder="Search Amazon products, brands and more..."
+                placeholder="Search Leegality products, brands and more..."
                 role="combobox"
                 type="search"
                 value={query}

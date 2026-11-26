@@ -63,7 +63,7 @@ export default function SignupDialog({ onClose }: SignupDialogProps) {
           </button>
         </form>
         <p className="signup-legal">
-          By continuing, you agree to Amazon&apos;s{" "}
+          By continuing, you agree to Leegality&apos;s{" "}
           <span className="signup-inline-link">Conditions of Use</span> and{" "}
           <span className="signup-inline-link">Privacy Notice</span>.
         </p>

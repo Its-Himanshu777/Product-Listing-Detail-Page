@@ -40,7 +40,7 @@ export default function ProductCard({
         </div>
         <div className="product-info">
           <span className="product-category">
-            {(product.brand || "Amazon").toUpperCase()}
+            {(product.brand || "Leegality").toUpperCase()}
           </span>
           <h3>{product.title}</h3>
           <div className="card-rating">
