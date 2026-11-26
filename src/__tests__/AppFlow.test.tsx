@@ -31,6 +31,16 @@ const smartphoneProducts: Product[] = Array.from({ length: 14 }, (_, i) => ({
   rating: 4.5,
   thumbnail: `https://example.com/phone-${i + 1}.jpg`,
   images: [`https://example.com/phone-${i + 1}.jpg`],
+  reviews:
+    i === 0
+      ? [
+          {
+            reviewerName: "Emily",
+            rating: 4,
+            comment: "Excellent phone with great camera and battery life.",
+          },
+        ]
+      : [],
 }));
 
 const groceryProducts: Product[] = [
@@ -170,8 +180,11 @@ describe("Product listing and detail flow", () => {
     expect(
       await screen.findByText("Detailed specs for Smartphone 1"),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("Excellent phone with great camera and battery life."),
+    ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "← Back to results" }));
+    await user.click(screen.getByRole("button", { name: "← Back" }));
 
     expect(await screen.findByText("7 results")).toBeInTheDocument();
     expect(screen.getByRole("checkbox", { name: /^Apple/ })).toBeChecked();
@@ -193,7 +206,7 @@ describe("Product listing and detail flow", () => {
     await user.click(screen.getByRole("link", { name: "View Organic Apples" }));
     expect(await screen.findByText("Fresh crisp apples")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "← Back to results" }));
+    await user.click(screen.getByRole("button", { name: "← Back" }));
     expect(await screen.findByText("1 result")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Search products...")).toHaveValue(
       "Apples",
@@ -210,7 +223,7 @@ describe("Product listing and detail flow", () => {
     expect(
       await screen.findByText("Detailed specs for Smartphone 1"),
     ).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "← Back to results" }));
+    await user.click(screen.getByRole("button", { name: "← Back" }));
 
     await user.click(screen.getByRole("checkbox", { name: "Smartphones" }));
     await user.click(await screen.findByRole("checkbox", { name: /^Apple/ }));
@@ -228,8 +241,11 @@ describe("Product listing and detail flow", () => {
     expect(
       await screen.findByText("Detailed specs for Smartphone 1"),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("Excellent phone with great camera and battery life."),
+    ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "← Back to results" }));
+    await user.click(screen.getByRole("button", { name: "← Back" }));
     expect(await screen.findByText("7 results")).toBeInTheDocument();
     expect(screen.getByRole("checkbox", { name: "Smartphones" })).toBeChecked();
     expect(screen.getByRole("checkbox", { name: /^Apple/ })).toBeChecked();

@@ -13,7 +13,7 @@ export default function ErrorState({
   message,
   onRetry,
   onBack,
-  backLabel = "← Back to results",
+  backLabel = "← Back",
 }: ErrorStateProps) {
   return (
     <div

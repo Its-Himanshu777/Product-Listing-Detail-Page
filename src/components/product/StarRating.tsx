@@ -25,7 +25,7 @@ export default function StarRating({ rating }: StarRatingProps) {
           );
         })}
       </span>
-      <span className="font-semibold text-muted">{rating.toFixed(1)}</span>
+      <span className="font-medium text-muted">({rating.toFixed(1)})</span>
     </span>
   );
 }
